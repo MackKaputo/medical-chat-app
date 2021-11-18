@@ -20,13 +20,10 @@ function App() {
   return (
     <div className="app__wrapper">
       <Chat client={client} theme="team light">
-        <ChannelListContainer 
         
-        />
+        <ChannelListContainer />
 
-        <ChannelContainer 
-        
-        />
+        <ChannelContainer />
       </Chat>
     </div>
   )
