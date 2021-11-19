@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
+import axios from "axios"
 
 import signinImage from '../assets/signup.jpg'
+import Cookies from 'universal-cookie'
+
+// create cookie instance
+const cookies = new Cookies()
 
 const initialState = {
     fullName: "",
@@ -12,6 +17,7 @@ const initialState = {
 }
 
 export default function Auth() {
+
     const [isSignup, setIsSignup] = useState(true)
     const [form, setForm] = useState(initialState)
 
@@ -23,11 +29,32 @@ export default function Auth() {
         setForm({ ...form, [event.target.name]: event.target.value})
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
 
-        console.log(form)
+        const { fullName, username, password, phoneNumber, avatarURL } = form
 
+        const URL = "http://localhost:5000/auth"
+
+        const { data: { token, userId, hashedPassword } } = await axios.post(`${URL}/${isSignup? "signup" : "login" }`, {
+            fullName, username, password, phoneNumber, avatarURL
+        })
+
+        cookies.set('token', token)
+        cookies.set('fullName', fullName)
+        cookies.set('username', username)
+        cookies.set('userId', userId)
+
+        if(isSignup) {
+            cookies.set('phoneNumber', phoneNumber)
+            cookies.set('avatarURL', avatarURL)
+            cookies.set('username', username)
+            cookies.set('hashedPassword', hashedPassword)
+        }
+
+        // reload the app, so the authToken will be filled this time when App loads
+        window.location.reload()
+ 
     }
   return (
     <div className="auth__form-container">
