@@ -41,7 +41,7 @@ const login = async (req, res) => {
 
         const serverClient = connect(api_key, api_secret, app_id)
         const client = StreamChat.getInstance(api_key, api_secret)
-
+        // Get the list of all users
         const { users } = await client.queryUsers({name: username})
 
         // console.log("received username", username)
